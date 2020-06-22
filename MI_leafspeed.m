@@ -79,20 +79,16 @@ for jj=1:VMAT_PLN_INFO.Total_CPs-1
 end
 
 MLC_speed_mat(:,flag) = 0;
+VMAT_PLN_INFO.MLC_speed_std = std(MLC_speed_mat,0,2);
 
-MLC_std = zeros(size(MLC_speed_mat,1),1);
-
-for k=1:size(MLC_speed_mat,1)
-    MLC_std(k) = std(abs(MLC_speed_mat(k,:)));
-end
 
 % initialize the Z distribution
 f = 0:0.01:2;
-Z = zeros(size(MLC_std,1),length(f));
+Z = zeros(size(VMAT_PLN_INFO.MLC_speed_std,1),length(f));
 X = abs(MLC_speed_mat); % absolute value of leaf speed
 
 for ii = 1:size(Z,1)
-    f_threshold = f*MLC_std(ii); % the serial number of leaf position (e.g 2nd leaf of 160 leaves)
+    f_threshold = f*VMAT_PLN_INFO.MLC_speed_std(ii); % the serial number of leaf position (e.g 2nd leaf of 160 leaves)
     for jj = 1:size(Z,2)      
         Z(ii,jj) = sum(X(ii,:)>f_threshold(ii))/VMAT_PLN_INFO.Total_CPs;
     end
