@@ -13,10 +13,10 @@ end
 
 VMAT_PLN_INFO.MLC_acceleration_mat(:,117) = 0;
 
-MLC_std = zeros(size(MLC_speed_mat,1),1);
+MLC_acceleration_std = zeros(size(VMAT_PLN_INFO.MLC_acceleration_mat,1),1);
 
-for k=1:size(MLC_speed_mat,1)
-    MLC_std(k) = std(abs(MLC_speed_mat(k,:)));
+for k=1:size(VMAT_PLN_INFO.MLC_acceleration_mat,1)
+    MLC_acceleration_std(k) = std(abs(VMAT_PLN_INFO.MLC_acceleration_mat(k,:)));
 end
 
 % initialize the Z distribution
