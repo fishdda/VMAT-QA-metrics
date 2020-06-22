@@ -74,8 +74,8 @@ end
 MLC_speed_mat = zeros(size(VMAT_PLN_INFO.CP_info{1, 3},1),VMAT_PLN_INFO.Total_CPs-1); % construct the MLC speed matrix (num of MLC leaves x num of control points)
 
 for jj=1:VMAT_PLN_INFO.Total_CPs-1
-    MLC_speed_mat(:,jj) = (VMAT_PLN_INFO.CP_info{jj+1, 3}-...
-        VMAT_PLN_INFO.CP_info{jj, 3})./time_interval(jj);  %mm/s
+    MLC_speed_mat(:,jj) = abs((VMAT_PLN_INFO.CP_info{jj, 3}-...
+        VMAT_PLN_INFO.CP_info{jj+1, 3}))./time_interval(jj);  %mm/s
 end
 
 MLC_speed_mat(:,flag) = 0;
