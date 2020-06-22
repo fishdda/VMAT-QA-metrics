@@ -1,4 +1,4 @@
-function VMAT_PLN_INFO= MI_leafspeed(VMAT_PLN_INFO)
+function [Modulation_Index,MLC_speed_mat] = MI_leafspeed(VMAT_PLN_INFO)
 %UNTITLED Summary of this function goes here
 %   Detailed explanation goes here
 
@@ -98,14 +98,16 @@ for ii = 1:size(Z,1)
     end
 end
 
-idx1 = find(f==0.2);idx2 = find(f==0.5);idx3 = find(f==1);idx4 = find(f==2);
-VMAT_PLN_INFO.MI_S_02 = sum(0.01*sum(Z(:,1:idx1),2));
-VMAT_PLN_INFO.MI_S_05 = sum(0.01*sum(Z(:,1:idx2),2));
-VMAT_PLN_INFO.MI_S_1 = sum(0.01*sum(Z(:,1:idx3),2));
-VMAT_PLN_INFO.MI_S_2 = sum(0.01*sum(Z(:,1:idx4),2));
 
-VMAT_PLN_INFO.MLC_speed_mat = MLC_speed_mat; % a matrix (160 leaf x 219 control points)
-VMAT_PLN_INFO.CP_time_interval = time_interval; % time interval between different control points
+
+
+idx1 = find(f==0.2);idx2 = find(f==0.5);idx3 = find(f==0.5);
+Modulation_Index.MI_S_02 = sum(0.01*sum(Z(:,1:idx1),2));
+Modulation_Index.MI_S_05 = 0.01*sum();
+Modulation_Index.MI_S_1 = 0.01*sum();
+Modulation_Index.MI_S_2 = 0.01*sum();
+
+
 end
 
 
