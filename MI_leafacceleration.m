@@ -30,7 +30,7 @@ for ii = 1:size(Z,1)
         count = 0; % count the N satisfied the constraints MLC speed > f*std_MLC_speed; MLC acceleration > f*std_MLC_acceleration/time_interval
         for kk = 1:size(VMAT_PLN_INFO.MLC_acceleration_mat,2)
             if VMAT_PLN_INFO.MLC_speed_mat(ii,kk) >  f_threshold1(jj) ...
-            || VMAT_PLN_INFO.MLC_acceleration_mat(ii,kk) > f_threshold2(jj)*VMAT_PLN_INFO.CP_time_interval(kk)
+            || VMAT_PLN_INFO.MLC_acceleration_mat(ii,kk) > f_threshold2(jj)/VMAT_PLN_INFO.CP_time_interval(kk)
                     count = count + 1;
             end
         
