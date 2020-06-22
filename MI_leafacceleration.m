@@ -1,7 +1,6 @@
-function [outputArg1,outputArg2] = MI_leafacceleration(inputArg1,inputArg2)
+function VMAT_PLN_INFO = MI_leafacceleration(VMAT_PLN_INFO)
 %UNTITLED3 Summary of this function goes here
 %   Detailed explanation goes here
-outputArg1 = inputArg1;
-outputArg2 = inputArg2;
+
 end
 
