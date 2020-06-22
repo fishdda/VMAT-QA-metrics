@@ -11,18 +11,23 @@ for jj=1:VMAT_PLN_INFO.Total_CPs-2
         VMAT_PLN_INFO.MLC_speed_mat(:,jj+1))./VMAT_PLN_INFO.CP_time_interval(jj);  %mm/s
 end
 
-VMAT_PLN_INFO.MLC_acceleration_mat(:,117) = 0;
+% VMAT_PLN_INFO.MLC_acceleration_mat(:,117) = 0;
+VMAT_PLN_INFO.MLC_acceleration_mat(isinf(VMAT_PLN_INFO.MLC_acceleration_mat...
+    )|isnan(VMAT_PLN_INFO.MLC_acceleration_mat)) = 0; % Replace NaNs and infinite values with zeros
 
-MLC_acceleration_std = zeros(size(VMAT_PLN_INFO.MLC_acceleration_mat,1),1);
-
-for k=1:size(VMAT_PLN_INFO.MLC_acceleration_mat,1)
-    MLC_acceleration_std(k) = std(abs(VMAT_PLN_INFO.MLC_acceleration_mat(k,:)));
-end
+MLC_acceleration_std = std(VMAT_PLN_INFO.MLC_acceleration_mat,0,2); % calculate the deviation of acceleration
 
 % initialize the Z distribution
-f = 0:0.01:2;
+f = 0:0.01:2; 
 Z = zeros(size(MLC_std,1),length(f));
 X = abs(MLC_speed_mat); % absolute value of leaf speed
+
+
+
+
+
+
+
 
 for ii = 1:size(Z,1)
     f_threshold = f*MLC_std(ii); % the serial number of leaf position (e.g 2nd leaf of 160 leaves)
