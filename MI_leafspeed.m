@@ -90,7 +90,7 @@ X = abs(MLC_speed_mat); % absolute value of leaf speed
 for ii = 1:size(Z,1)
     f_threshold = f*VMAT_PLN_INFO.MLC_speed_std(ii); % the serial number of leaf position (e.g 2nd leaf of 160 leaves)
     for jj = 1:size(Z,2)      
-        Z(ii,jj) = sum(X(ii,:)>f_threshold(ii))/VMAT_PLN_INFO.Total_CPs;
+        Z(ii,jj) = sum(X(ii,:)>f_threshold(jj))/(VMAT_PLN_INFO.Total_CPs-1);
     end
 end
 

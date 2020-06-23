@@ -27,15 +27,15 @@ for ii = 1:size(Z,1)
     f_threshold1 = f*VMAT_PLN_INFO.MLC_speed_std(ii); % the serial number of leaf position (e.g 2nd leaf of 160 leaves)
     f_threshold2 = f*VMAT_PLN_INFO.MLC_acceleration_std(ii); % the serial number of leaf position (e.g 2nd leaf of 160 leaves)
     for jj = 1:size(Z,2)
-        count = 0; % count the N satisfied the constraints MLC speed > f*std_MLC_speed; MLC acceleration > f*std_MLC_acceleration/time_interval
+        N = 0; % count the N satisfied the constraints MLC speed > f*std_MLC_speed; MLC acceleration > f*std_MLC_acceleration/time_interval
         for kk = 1:size(VMAT_PLN_INFO.MLC_acceleration_mat,2)
             if VMAT_PLN_INFO.MLC_speed_mat(ii,kk) >  f_threshold1(jj) ...
             || VMAT_PLN_INFO.MLC_acceleration_mat(ii,kk) > f_threshold2(jj)/VMAT_PLN_INFO.CP_time_interval(kk)
-                    count = count + 1;
+                    N = N + 1;
             end
-        
-        Z(ii,jj) = count/(VMAT_PLN_INFO.Total_CPs-2);       
+               
         end
+        Z(ii,jj) = N/(VMAT_PLN_INFO.Total_CPs-2);
     end
 end
 
