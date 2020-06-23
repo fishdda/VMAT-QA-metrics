@@ -71,6 +71,9 @@ VMAT_PLN_INFO.MI_TotalModulation_2 = sum(0.01*sum(Z(:,1:idx4),2));
 VMAT_PLN_INFO.DOSERATE = Dose_Rate;
 VMAT_PLN_INFO.GantrySpeed = Gantry_Speed;
 
+% average dose rate and standard deviation of dose rate (ADR, SDR)
+VMAT_PLN_INFO.ADR = mean(Dose_Rate);
+VMAT_PLN_INFO.SDR = std(Dose_Rate);
 
 end
 

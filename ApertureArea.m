@@ -1,31 +1,11 @@
 function VMAT_PLN_INFO = ApertureArea(VMAT_PLN_INFO,BLD_type)
 %
 % notes: number of mlc leaf: 160 agility
-% plan_path = 'C:\Users\xhuae08006\Downloads\003_stepshootAP.dcm';
-% mlc_width = 5; % mlc width = 5mm
 
-
-% plan_info = dicominfo(plan_path);
-% beam_num = fieldnames(plan_info.BeamSequence);
-% seg_num = zeros(size(beam_num,1),1);
-% for j=1:size(beam_num,1)
-%     eval(['seg_num(j) = size(fieldnames(plan_info.BeamSequence.Item_',int2str(j),...
-%         '.ControlPointSequence),1)/2;'])    
-% end
-
-% seg_area = zeros(size(beam_num,1),max(seg_num));
 seg_area = zeros(VMAT_PLN_INFO.Total_CPs,1);
 for k= 1:length(seg_area)
     % segment serial number
         if BLD_type == 'synergy'
-%             eval(['mlc_leaf = plan_info.BeamSequence.Item_',int2str(k),...
-%                 '.ControlPointSequence.Item_',int2str(2*i-1),...
-%                 '.BeamLimitingDevicePositionSequence.Item_3.LeafJawPositions;'])
-        % ith segments 
-    %         eval(['mlc_leaf = plan_info.BeamSequence.Item_',int2str(k),...
-    %             '.ControlPointSequence.Item_',int2str(2*i-1),...
-    %             '.BeamLimitingDevicePositionSequence.Item_2.LeafJawPositions;'])
-
             mlc_leaf = reshape(mlc_leaf,[size(mlc_leaf,1)/2,2]);
             VMAT_PLN_INFO.CP_info{1, 3}
     %         eval(['yjaw = plan_info.BeamSequence.Item_',int2str(k),...
@@ -37,14 +17,8 @@ for k= 1:length(seg_area)
             
         elseif BLD_type == 'agility'
             mlc_width = 5; % 5mm
-%             eval(['mlc_leaf = plan_info.BeamSequence.Item_',int2str(k),...
-%                 '.ControlPointSequence.Item_',int2str(2*i-1),...
-%                 '.BeamLimitingDevicePositionSequence.Item_2.LeafJawPositions;'])  
             mlc_leaf = reshape(VMAT_PLN_INFO.CP_info{k, 3},[size(VMAT_PLN_INFO.CP_info{k, 3},1)/2,2]);
-            yjaw = VMAT_PLN_INFO.CP_info{1, 4};  
-%             eval(['yjaw = plan_info.BeamSequence.Item_',int2str(k),...
-%                 '.ControlPointSequence.Item_',int2str(2*i-1),...
-%                 '.BeamLimitingDevicePositionSequence.Item_1.LeafJawPositions;'])
+            yjaw = VMAT_PLN_INFO.CP_info{k, 4};  
         end
         
         start_point = ((200+yjaw(1))/mlc_width)+1;
@@ -73,9 +47,6 @@ for k= 1:length(seg_area)
             for j = start_point:end_point
                  seg_area(k) =  seg_area(k) + (mlc_leaf(j,2)-mlc_leaf(j,1))*mlc_width/100;   
             end
-%             disp('rem(start_point,1) == 0 && rem(end_point,1) ~= 0');
-%             disp([k,i]);
-%             disp(seg_area(k,i));
             
         elseif rem(start_point,1) ~= 0 && rem(end_point,1) ~= 0
 
