@@ -102,6 +102,9 @@ VMAT_PLN_INFO.MI_S_2 = sum(0.01*sum(Z(:,1:idx4),2));
 
 VMAT_PLN_INFO.MLC_speed_mat = MLC_speed_mat; % a matrix (160 leaf x 219 control points)
 VMAT_PLN_INFO.CP_time_interval = time_interval; % time interval between different control points
+
+% calculate average leaf speed
+VMAT_PLN_INFO.ALS = mean(mean(VMAT_PLN_INFO.MLC_speed_mat)); % mm/s
 end
 
 
