@@ -45,5 +45,9 @@ VMAT_PLN_INFO.MI_Accelerate_05 = sum(0.01*sum(Z(:,1:idx2),2));
 VMAT_PLN_INFO.MI_Accelerate_1 = sum(0.01*sum(Z(:,1:idx3),2));
 VMAT_PLN_INFO.MI_Accelerate_2 = sum(0.01*sum(Z(:,1:idx4),2));
 
+% calculate average leaf speed and standard deviation of leaf speed
+VMAT_PLN_INFO.ALA = mean(mean(VMAT_PLN_INFO.MLC_acceleration_mat)); % mm/s
+VMAT_PLN_INFO.SLA = mean(VMAT_PLN_INFO.MLC_acceleration_std); % mm/s
+
 end
 
