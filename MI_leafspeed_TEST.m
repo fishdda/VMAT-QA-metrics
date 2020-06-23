@@ -1,6 +1,6 @@
-function VMAT_PLN_INFO= MI_leafspeed(VMAT_PLN_INFO)
-%MI_leafspeed: Summary of this function goes here
-%   
+function VMAT_PLN_INFO= MI_leafspeed_TEST(VMAT_PLN_INFO)
+%UNTITLED Summary of this function goes here
+%   Detailed explanation goes here
 
 Max_gantry_speed = 6; % degree/s
 Max_dose_rate = 720;  % MU/min
@@ -70,9 +70,9 @@ for jj=j+1:VMAT_PLN_INFO.Total_CPs-1
 end   
 
 %% test the uniform gantry speed 
-% for sss = 1:size(VMAT_PLN_INFO.CP_info(:,1),1)-1
-%     time_interval_1(sss) =  abs(VMAT_PLN_INFO.CP_info{sss,1}-VMAT_PLN_INFO.CP_info{sss+1,1})/6;
-% end
+for sss = 1:size(VMAT_PLN_INFO.CP_info(:,1),1)-1
+    time_interval_1(sss) =  abs(VMAT_PLN_INFO.CP_info{sss,1}-VMAT_PLN_INFO.CP_info{sss+1,1})/6;
+end
 
 
 
@@ -80,15 +80,15 @@ end
 
 MLC_speed_mat = zeros(size(VMAT_PLN_INFO.CP_info{1, 3},1),VMAT_PLN_INFO.Total_CPs-1); % construct the MLC speed matrix (num of MLC leaves x num of control points)
 
-% for jj=1:VMAT_PLN_INFO.Total_CPs-1
-%     MLC_speed_mat_1(:,jj) = abs((VMAT_PLN_INFO.CP_info{jj, 3}-...
-%         VMAT_PLN_INFO.CP_info{jj+1, 3}))./time_interval_1(jj);  %mm/s
-% end
-
 for jj=1:VMAT_PLN_INFO.Total_CPs-1
-    MLC_speed_mat(:,jj) = abs((VMAT_PLN_INFO.CP_info{jj, 3}-...
-        VMAT_PLN_INFO.CP_info{jj+1, 3}))./time_interval(jj);  %mm/s
+    MLC_speed_mat_1(:,jj) = abs((VMAT_PLN_INFO.CP_info{jj, 3}-...
+        VMAT_PLN_INFO.CP_info{jj+1, 3}))./time_interval_1(jj);  %mm/s
 end
+
+% for jj=1:VMAT_PLN_INFO.Total_CPs-1
+%     MLC_speed_mat(:,jj) = abs((VMAT_PLN_INFO.CP_info{jj, 3}-...
+%         VMAT_PLN_INFO.CP_info{jj+1, 3}))./time_interval(jj);  %mm/s
+% end
 
 MLC_speed_mat(:,flag) = 0;
 VMAT_PLN_INFO.MLC_speed_std = std(MLC_speed_mat,0,2);
