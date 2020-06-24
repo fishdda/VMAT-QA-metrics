@@ -1,4 +1,4 @@
-function VMAT_PLN_INFO = ApertureArea(VMAT_PLN_INFO,BLD_type)
+function VMAT_PLN_INFO = Aperture_Area(VMAT_PLN_INFO,BLD_type)
 %
 % notes: number of mlc leaf: 160 agility
 
@@ -67,5 +67,6 @@ for k= 1:length(seg_area)
         end
 
 VMAT_PLN_INFO.CP_info{k,5} = seg_area(k);
+
 end
 end
