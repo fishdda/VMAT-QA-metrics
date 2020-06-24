@@ -28,16 +28,16 @@ for k= 2:length(VMAT_PLN_INFO.Total_CPs)
         end_point = ceil(size(mlc_leaf,1)-(200-yjaw(2))/mlc_width);
         N_1 = 0; N_2 = 0; N_3 = 0; N_4 = 0;
         for j = start_point:end_point
-           if abs(mlc_leaf(j,2)-mlc_leaf(j,1))>3.4 && abs(mlc_leaf(j,2)-mlc_leaf(j,1))<D_thres(1)
+           if abs(mlc_leaf(j,2)-mlc_leaf(j,1))>3.4 && abs(mlc_leaf(j,2)-mlc_leaf(j,1)) < D_thres(1)
                N_1 = N_1 + 1;
                disp('N1 appearance!!')
-           elseif abs(mlc_leaf(j,2)-mlc_leaf(j,1))>3.4 && abs(mlc_leaf(j,2)-mlc_leaf(j,1))<D_thres(2)
+           elseif abs(mlc_leaf(j,2)-mlc_leaf(j,1))>3.4 && abs(mlc_leaf(j,2)-mlc_leaf(j,1)) < D_thres(2)
                N_2 = N_2 + 1;
                disp('N2 appearance!!')
-           elseif abs(mlc_leaf(j,2)-mlc_leaf(j,1))>3.4 && abs(mlc_leaf(j,2)-mlc_leaf(j,1))<D_thres(3)
+           elseif abs(mlc_leaf(j,2)-mlc_leaf(j,1))>3.4 && abs(mlc_leaf(j,2)-mlc_leaf(j,1)) < D_thres(3)
                N_3 = N_3 + 1;
                disp('N3 appearance!!')
-           elseif abs(mlc_leaf(j,2)-mlc_leaf(j,1))>3.4 && abs(mlc_leaf(j,2)-mlc_leaf(j,1))<D_thres(4)
+           elseif abs(mlc_leaf(j,2)-mlc_leaf(j,1))>3.4 && abs(mlc_leaf(j,2)-mlc_leaf(j,1)) < D_thres(4)
                N_4 = N_4 + 1;
                disp('N4 appearance!!')
            end
