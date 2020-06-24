@@ -1,7 +1,10 @@
 function VMAT_PLN_INFO= MI_leafspeed(VMAT_PLN_INFO)
 %MI_leafspeed: Summary of this function goes here
-%   
+%   The MI_leafspeed.m calculate the Modulation Index for VMAT leaf speed
+%   doi: https://doi.org/10.1016/j.ijrobp.2019.07.049
+%
 
+%% prior-settings of Monaco Model for Elekta Machine
 Max_gantry_speed = 6; % degree/s
 Max_dose_rate = 720;  % MU/min
 

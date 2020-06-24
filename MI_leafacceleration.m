@@ -1,6 +1,8 @@
 function VMAT_PLN_INFO = MI_leafacceleration(VMAT_PLN_INFO)
-%UNTITLED3 Summary of this function goes here
-%   Detailed explanation goes here
+%MI_leafacceleration Summary of this function goes here
+%   The MI_leafacceleration.m calculate the Modulation Index for VMAT leaf
+%   acceleration
+%   doi: https://doi.org/10.1016/j.ijrobp.2019.07.049  
 
 %% calculate acceleration between CPs
 % construct the MLC speed matrix (num of MLC leaves x num of control points)

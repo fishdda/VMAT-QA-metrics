@@ -1,6 +1,9 @@
 function VMAT_PLN_INFO = MI_TotalModulation(VMAT_PLN_INFO)
-%UNTITLED4 Summary of this function goes here
-%   Comprehensively consider gantry speed, dose rate 
+%MI_TotalModulation Summary of this function goes here
+%   MI_TotalModulation.m Comprehensively consider gantry acceleration,
+%   dose rate variation, mlc leaf speed and acceleration to calculate
+%   Modulation Index for VMAT
+%   doi: https://doi.org/10.1016/j.ijrobp.2019.07.049
 
 %% calculate gantry speed and acceleration (GA = abs(Gantry_Speed_i - Gantry_Speed_i+1))
 Gantry_Angle = VMAT_PLN_INFO.CP_info(:,1);
