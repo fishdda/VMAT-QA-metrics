@@ -45,11 +45,25 @@ end
 
 %% plot segment shape
 MLC = PLN_INFO.CP_info(:,4);
-JAW = PLN_INFO.CP_info{1, 2};
-mlc_width = 5;
-num_seg = 1; beam_num = 1;
-goal_path = cd;
-plot_mlc_pinnacle_static(MLC,JAW,mlc_width,num_seg,beam_num,goal_path,'Agility')
+% JAW = PLN_INFO.CP_info{1, 2};
+% mlc_width = 5;
+% num_seg = 5; beam_num = 1;
+% goal_path = cd;
+for j=1:size(MLC,1)
+    figure(j);
+    MLC_2_ = MLC{j,1};
+    for i=1:size(MLC_2_,1)
+    % x : 0, [0 y_position MLC_length MLC_leaf_width]
+    rectangle('Position', [0 1024-i*12.8 512+MLC_2_(i,1) 12.8], 'FaceColor', [0 0 1 0.5]);
+    hold on;
+    rectangle('Position', [512+MLC_2_(i,2) 1024-i*12.8 512-MLC_2_(i,2) 12.8], 'FaceColor', [0 0 1 0.5]);
+    hold on;
+    plot(512.5,512.5,'r+');
+    axis off;
+    end
+    saveas(gcf,['/Users/henryhuang/Desktop/GitFolder/VMAT-QA-metrics/','beam_',int2str(j),'.png']);
+end
+
 
 
 end
