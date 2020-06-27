@@ -66,7 +66,8 @@ for k= 1:length(seg_area)
 
         end
 
-VMAT_PLN_INFO.CP_info{k,5} = seg_area(k);
+
 
 end
+VMAT_PLN_INFO.AA = seg_area;
 end
