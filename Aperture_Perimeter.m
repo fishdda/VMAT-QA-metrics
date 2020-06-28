@@ -54,7 +54,7 @@ for k= 1:length(seg_perimeter)
             end
             
         elseif rem(start_point,1) ~= 0 && rem(end_point,1) == 0
-            % calculate segment area
+            % calculate segment perimeter
             start_point = floor((200+yjaw(1))/mlc_width)+1;
             first_width = mlc_width - mod(200+yjaw(1),mlc_width); % first leaf should be only 2mm width
             seg_perimeter(k) = seg_perimeter(k) + (mlc_leaf(start_point,2)-mlc_leaf(start_point,1))/10 + 2*first_width/10; 

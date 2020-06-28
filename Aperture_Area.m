@@ -70,4 +70,5 @@ for k= 1:length(seg_area)
 
 end
 VMAT_PLN_INFO.AA = seg_area;
+VMAT_PLN_INFO.AI = (VMAT_PLN_INFO.AP).^2./(4*pi*seg_area); 
 end
