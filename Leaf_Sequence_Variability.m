@@ -8,6 +8,13 @@ function VMAT_PLN_INFO = Leaf_Sequence_Variability(VMAT_PLN_INFO,BLD_type)
 %   of the leaf positions (pos). Leaves are not considered if they are 
 %   positioned under the jaws.
 
+
+%% calculate the MU weights
+weighted_MU = VMAT_PLN_INFO.CP_info(:,2);
+for i=1:length(weighted_MU)-1
+    MU_weight(i) =  (weighted_MU{i+1,1} - weighted_MU{i,1})/VMAT_PLN_INFO.Total_MU;
+end
+
 %% calculate LSV of each segment
 LSV = zeros(VMAT_PLN_INFO.Total_CPs,1);
 for k= 1:length(LSV)
@@ -112,6 +119,6 @@ end
 
 VMAT_PLN_INFO.LSV = LSV;
 
-
+VMAT_PLN_INFO.LSV_weighted = sum(LSV(2:end).*MU_weight');
 end
 

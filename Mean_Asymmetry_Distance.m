@@ -67,7 +67,7 @@ for k= 1:length(Aperture_Center)
         end
 
 end
-VMAT_PLN_INFO.MAD= sum(Aperture_Center.*MU_weight')/10;  % unit : cm
+VMAT_PLN_INFO.MAD= sum(Aperture_Center.*MU_weight');  % unit : mm
 
 end
 

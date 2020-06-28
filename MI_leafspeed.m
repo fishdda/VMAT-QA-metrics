@@ -119,8 +119,8 @@ VMAT_PLN_INFO.MLC_speed_mat = MLC_speed_mat; % a matrix (160 leaf x 219 control 
 VMAT_PLN_INFO.CP_time_interval = time_interval; % time interval between different control points
 
 % calculate average leaf speed and standard deviation of leaf speed
-VMAT_PLN_INFO.ALS = mean(VMAT_PLN_INFO.MLC_speed_mat(:))/10; % cm/s
-VMAT_PLN_INFO.SLS = std(VMAT_PLN_INFO.MLC_speed_mat(:))/10; % cm/s
+VMAT_PLN_INFO.ALS = mean(VMAT_PLN_INFO.MLC_speed_mat(:)); % mm/s
+VMAT_PLN_INFO.SLS = std(VMAT_PLN_INFO.MLC_speed_mat(:)); % mm/s
 end
 
 
