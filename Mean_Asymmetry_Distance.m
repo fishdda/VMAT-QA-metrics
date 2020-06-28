@@ -37,19 +37,22 @@ for k= 1:length(Aperture_Center)
         if rem(start_point,1) == 0 && rem(end_point,1) == 0
             
             % calculate segment center 
-            Aperture_Center(k) = sum(abs((mlc_leaf(start_point:end_point,1) + mlc_leaf(start_point:end_point,2))./2));
+            Aperture_Center(k) = sum(abs((mlc_leaf(start_point:end_point,1) + mlc_leaf(start_point:end_point,2))./2))...
+                /length(start_point:end_point);
             
         elseif rem(start_point,1) ~= 0 && rem(end_point,1) == 0
 
             start_point = floor((200+yjaw(1))/mlc_width)+1;
             % calculate segment center 
-            Aperture_Center(k) = sum(abs((mlc_leaf(start_point:end_point,1) + mlc_leaf(start_point:end_point,2))./2));
+            Aperture_Center(k) = sum(abs((mlc_leaf(start_point+1:end_point,1) + mlc_leaf(start_point+1:end_point,2))./2))...
+                /length(start_point+1:end_point);
             
         elseif rem(start_point,1) == 0 && rem(end_point,1) ~= 0
             
             end_point = size(mlc_leaf,1)/2 + floor(yjaw(2)/mlc_width);
             % calculate segment center 
-            Aperture_Center(k) = sum(abs((mlc_leaf(start_point:end_point+1,1) + mlc_leaf(start_point:end_point+1,2))./2));
+            Aperture_Center(k) = sum(abs((mlc_leaf(start_point:end_point,1) + mlc_leaf(start_point:end_point,2))./2))...
+                /length(start_point:end_point);
 
             
         elseif rem(start_point,1) ~= 0 && rem(end_point,1) ~= 0
@@ -57,7 +60,8 @@ for k= 1:length(Aperture_Center)
             start_point = floor((200+yjaw(1))/mlc_width)+1;
             end_point = size(mlc_leaf,1)/2 + floor(yjaw(2)/mlc_width);
             % calculate segment center 
-            Aperture_Center(k) = sum(abs((mlc_leaf(start_point:end_point+1,1) + mlc_leaf(start_point:end_point+1,2))./2));
+            Aperture_Center(k) = sum(abs((mlc_leaf(start_point+1:end_point,1) + mlc_leaf(start_point+1:end_point,2))./2))...
+                /length(start_point+1:end_point);
 
  
         end

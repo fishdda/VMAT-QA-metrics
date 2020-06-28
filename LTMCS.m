@@ -1,0 +1,6 @@
+function VMAT_PLN_INFO = LTMCS(VMAT_PLN_INFO)
+%UNTITLED4 此处显示有关此函数的摘要
+%   此处显示详细说明
+VMAT_PLN_INFO.LTMCS = (1000 - VMAT_PLN_INFO.LT)/1000 * VMAT_PLN_INFO.MCS;
+end
+
