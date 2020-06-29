@@ -1,6 +1,6 @@
 function VMAT_PLN_INFO = Aperture_Area(VMAT_PLN_INFO,BLD_type)
-%
-% notes: number of mlc leaf: 160 agility
+%Aperture_Area calculate the aperture area in VMAT
+%   notes: number of mlc leaf: 160 agility
 
 seg_area = zeros(VMAT_PLN_INFO.Total_CPs,1);
 for k= 1:length(seg_area)

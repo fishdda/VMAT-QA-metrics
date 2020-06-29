@@ -1,6 +1,7 @@
 function VMAT_PLN_INFO= MI_leafspeed(VMAT_PLN_INFO)
 %MI_leafspeed: Summary of this function goes here
 %   The MI_leafspeed.m calculate the Modulation Index for VMAT leaf speed
+
 %   doi: https://doi.org/10.1016/j.ijrobp.2019.07.049
 %
 
@@ -72,21 +73,9 @@ for jj=j+1:VMAT_PLN_INFO.Total_CPs-1
    end
 end   
 
-%% test the uniform gantry speed 
-% for sss = 1:size(VMAT_PLN_INFO.CP_info(:,1),1)-1
-%     time_interval_1(sss) =  abs(VMAT_PLN_INFO.CP_info{sss,1}-VMAT_PLN_INFO.CP_info{sss+1,1})/6;
-% end
-
-
-
 %% calculate modulation index for leaf speed
 
 MLC_speed_mat = zeros(size(VMAT_PLN_INFO.CP_info{1, 3},1),VMAT_PLN_INFO.Total_CPs-1); % construct the MLC speed matrix (num of MLC leaves x num of control points)
-
-% for jj=1:VMAT_PLN_INFO.Total_CPs-1
-%     MLC_speed_mat_1(:,jj) = abs((VMAT_PLN_INFO.CP_info{jj, 3}-...
-%         VMAT_PLN_INFO.CP_info{jj+1, 3}))./time_interval_1(jj);  %mm/s
-% end
 
 for jj=1:VMAT_PLN_INFO.Total_CPs-1
     MLC_speed_mat(:,jj) = abs((VMAT_PLN_INFO.CP_info{jj, 3}-...

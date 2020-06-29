@@ -5,6 +5,7 @@ function VMAT_PLN_INFO = Aperture_Area_Variability(VMAT_PLN_INFO,BLD_type)
 %   by all of the segments. Segments that are more similar in area to 
 %   the maximum beam aperture contribute to a larger score.
 
+%   doi: http://dx.doi.org/10.1118/1.3276775
 %% calculate the MU weights
 weighted_MU = VMAT_PLN_INFO.CP_info(:,2);
 for i=1:length(weighted_MU)-1

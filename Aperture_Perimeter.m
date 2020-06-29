@@ -1,5 +1,4 @@
 function VMAT_PLN_INFO = Aperture_Perimeter(VMAT_PLN_INFO,BLD_type)
-
 % Aperture_Perimeter.m : calculate the perimeter of each control point
 % doi: http://dx.doi.org/10.1118/1.4861821
 

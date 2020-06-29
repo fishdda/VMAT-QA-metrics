@@ -6,6 +6,7 @@ function VMAT_PLN_INFO = Modulation_Complexity_Score(VMAT_PLN_INFO)
 %   LSV into the MCS calculation. The MCSbeam is the product of the LSVsegment
 %   and AAVsegment weighted by the relative MU of each segment in the beam
 
+%   doi: http://dx.doi.org/10.1118/1.3276775
 %% calculate the MU weights
 weighted_MU = VMAT_PLN_INFO.CP_info(:,2);
 for i=1:length(weighted_MU)-1

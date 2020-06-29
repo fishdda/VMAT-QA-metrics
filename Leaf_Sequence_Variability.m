@@ -8,7 +8,7 @@ function VMAT_PLN_INFO = Leaf_Sequence_Variability(VMAT_PLN_INFO,BLD_type)
 %   of the leaf positions (pos). Leaves are not considered if they are 
 %   positioned under the jaws.
 
-
+%   doi: http://dx.doi.org/10.1118/1.3276775
 %% calculate the MU weights
 weighted_MU = VMAT_PLN_INFO.CP_info(:,2);
 for i=1:length(weighted_MU)-1

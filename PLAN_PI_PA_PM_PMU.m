@@ -1,8 +1,10 @@
 function VMAT_PLN_INFO = PLAN_PI_PA_PM_PMU(VMAT_PLN_INFO,BLD_type)
 %PLAN_PI_PA_PM_PMU calculate plan area, plan irregularity, plan modulation 
-% and plan normalized MU
+%   and plan normalized MU
 %   Note: union aperture area is greater than or equal to the area of any
 %   individual aperture.
+
+%   doi: 10.1118/1.4861821
 %% calculate the differential MU weights
 weighted_MU = VMAT_PLN_INFO.CP_info(:,2);
 for i=1:length(weighted_MU)-1
