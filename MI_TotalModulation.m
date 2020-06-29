@@ -10,7 +10,12 @@ Gantry_Angle = VMAT_PLN_INFO.CP_info(:,1);
 Gantry_Speed = zeros(size(Gantry_Angle,1)-1,1);
 
 for kk = 1:length(Gantry_Speed)
-    Gantry_Speed(kk) = abs(Gantry_Angle{kk,1}-Gantry_Angle{kk+1,1})/VMAT_PLN_INFO.CP_time_interval(kk);
+    % in case this situation occur 359.8, 1.4, 2.5
+    if Gantry_Angle{kk,1} < Gantry_Angle{kk+1,1}
+        Gantry_Speed(kk) = abs(Gantry_Angle{kk,1}-Gantry_Angle{kk+1,1})/VMAT_PLN_INFO.CP_time_interval(kk);
+    else 
+        Gantry_Speed(kk) = abs(Gantry_Angle{kk+1,1}+360-Gantry_Angle{kk,1})/VMAT_PLN_INFO.CP_time_interval(kk);
+    end
 end
 
 Gantry_Acceleration = zeros(size(Gantry_Angle,1)-2,1);
