@@ -7,13 +7,18 @@ function VMAT_PLN_INFO = Modulation_Index_Li_Xing(VMAT_PLN_INFO)
 K = 10; % default number
 iteration = [-K:-1,1:K];
 MI = zeros(VMAT_PLN_INFO.Total_CPs,length(iteration));
-for j =1:length(iteration)
-    VMAT_PLN_INFO.CP_info(:,1) % gantry
-    VMAT_PLN_INFO.CP_info(:,2) % cumulative mu
-    for jj 
-    VMAT_PLN_INFO.CP_info(:,3) % mlc position leaf a and leaf b
-    
+for s = 1:size(MI,1)
+    for j =1:length(iteration)
+        if s+K(j) > 0 
+        factor = abs((VMAT_PLN_INFO.CP_info{s,2}-...
+            VMAT_PLN_INFO.CP_info{s+K(j),2})/(VMAT_PLN_INFO.CP_info{s,1}-...
+            VMAT_PLN_INFO.CP_info{s+K(j),1}));
+        mlc = VMAT_PLN_INFO.CP_info{s,3}; % mlc position leaf a and leaf b
+        mlc_k = VMAT_PLN_INFO.CP_info{s+K(j),3}; % mlc position leaf a and leaf b
+        MI(s,j) = sum(abs(mlc-mlc_k))*factor;
+    end
 end
+
 
 end
 
