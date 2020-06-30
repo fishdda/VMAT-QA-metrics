@@ -1,4 +1,4 @@
-function P=plandataread_VMAT(filename)
+function P=Varian_VMAT_decode(filename)
 % this function read plan data from RP*.dcm file, and put it into a
 % structure P. The fields in P:
 % 
