@@ -17,7 +17,9 @@ inf_ = {'VarName1','LinacStateActualValueNone',...
         'ActualDoseRateActualValueMumin',...
         'StepDoseActualValueMu',...
         'DlgY1ScaledActualmm',...
-        'DlgY2ScaledActualmm'};
+        'DlgY2ScaledActualmm',...
+        'X1DiaphragmScaledActualmm',...
+        'X2DiaphragmScaledActualmm'};
     
 for jj = 1:VMAT_PLN_INFO.Total_CPs-1    
     eval(['VMAT_PLN_INFO.TRF.CP',int2str(jj),...
@@ -123,7 +125,82 @@ boxplot(MLC_Speed_CP3_Y2 + DLGY2_CP3)
 xlabel('Y2 Leaf pair');
 ylabel('MLC+DLG Leaf Speed(mm/s)');
 
-% check mlc position between control point 3 and control point 4
+%% check mlc position between control point 3 and control point 4
+%%  e.g. Control Point 3
+
+% PLAN CP3 shape 
+PLAN_CP3 = flipud(reshape(VMAT_PLN_INFO.CP_info{3, 3},[80,2]));  
+
+% treatment delivery CP3 shape
+TRF_CP3 = table2struct(VMAT_PLN_INFO.TRF.CP3);
+MLC_TRF_CP3_Y1 = zeros(size(TRF_CP3,1),80); 
+MLC_TRF_CP3_Y2 = zeros(size(TRF_CP3,1),80);
+MLC_TRF_CP3_X1 = zeros(size(TRF_CP3,1),1); 
+MLC_TRF_CP3_X2 = zeros(size(TRF_CP3,1),1);
+for jj = 1: size(TRF_CP3,1)
+    MLC_TRF_CP3_X1(jj) = TRF_CP3(jj).X1DiaphragmScaledActualmm;
+    MLC_TRF_CP3_X2(jj) = TRF_CP3(jj).X2DiaphragmScaledActualmm;
+    for k = 1:80 
+        eval(['MLC_TRF_CP3_Y1(jj,k) = TRF_CP3(jj).Y1Leaf',int2str(k),'ScaledActualmm;']);
+        eval(['MLC_TRF_CP3_Y2(jj,k) = TRF_CP3(jj).Y2Leaf',int2str(k),'ScaledActualmm;']);
+    end
+end
+
+MLC_TRF_CP3_Y1 = MLC_TRF_CP3_Y1';MLC_TRF_CP3_Y2 = MLC_TRF_CP3_Y2';
+
+MLC_TRF_CP3 = [MLC_TRF_CP3_Y2(:,1),MLC_TRF_CP3_Y1(:,1)];
+MLC_TRF_CP3(1:76,1) = -MLC_TRF_CP3(1:76,1);
+
+Error_MLC_ =  MLC_TRF_CP3-PLAN_CP3;
+
+for s = 1:size(MLC_TRF_CP3_Y1,2)
+    MLC_TRF_CP3 = [-MLC_TRF_CP3_Y2(:,s),MLC_TRF_CP3_Y1(:,s)];
+    f = figure;
+    for i=1:size(MLC_TRF_CP3,1)
+        rectangle('Position', [0 1024-i*12.8 512+MLC_TRF_CP3(i,1) 12.8], 'FaceColor', [0 0 1 0.5]);
+        hold on;
+        rectangle('Position', [512+MLC_TRF_CP3(i,2) 1024-i*12.8 512-MLC_TRF_CP3(i,2) 12.8], 'FaceColor', [0 0 1 0.5]);
+        hold on;
+        plot(512.5,512.5,'r+');
+        axis off;
+    end
+    close(f)
+end
+
+
+
+
+
+
+
+
+
+
+figure;
+for i=1:size(MLC_TRF_CP3,1)
+rectangle('Position', [0 1024-i*12.8 512+MLC_TRF_CP3(i,1) 12.8], 'FaceColor', [0 0 1 0.5]);
+hold on;
+rectangle('Position', [512+MLC_TRF_CP3(i,2) 1024-i*12.8 512-MLC_TRF_CP3(i,2) 12.8], 'FaceColor', [0 0 1 0.5]);
+hold on;
+plot(512.5,512.5,'r+');
+axis off;
+end
+
+
+figure;
+for i=1:size(PLAN_CP3,1)
+% x : 0, [0 y_position MLC_length MLC_leaf_width]
+rectangle('Position', [0 1024-i*12.8 512+PLAN_CP3(i,1) 12.8], 'FaceColor', [0 0 1 0.5]);
+hold on;
+rectangle('Position', [512+PLAN_CP3(i,2) 1024-i*12.8 512-PLAN_CP3(i,2) 12.8], 'FaceColor', [0 0 1 0.5]);
+hold on;
+plot(512.5,512.5,'r+');
+axis off;
+end
+
+
+figure; 
+
 
 
 
