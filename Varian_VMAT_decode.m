@@ -34,7 +34,7 @@ function P=Varian_VMAT_decode(filename)
 % deliver type is treatment. exclude the error due to trying to read control 
 % points from set up beam
 % 
-% update 2018/07/05: read accumulated MU
+% 
 % 
 % 
 

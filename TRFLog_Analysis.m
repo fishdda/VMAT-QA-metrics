@@ -32,6 +32,8 @@ for jj = 1:VMAT_PLN_INFO.Total_CPs-1
     
 end
 
+
+%% check MU difference betweend treatment planning and delivery
 PLAN_MU = VMAT_PLN_INFO.CP_info(:,2);
 for i=1:size(PLAN_MU,1)-1
     PLAN_MU_(i) =  PLAN_MU{i+1,1} - PLAN_MU{i,1};
@@ -40,23 +42,24 @@ end
 figure; 
 plot(1:length(PLAN_MU_),PLAN_MU_,'b-');
 hold on; 
-plot(1:length(Machine_MU),Machine_MU,'r-');
+plot(1:length(VMAT_PLN_INFO.TRF_Differential_MU),VMAT_PLN_INFO.TRF_Differential_MU,'r-');
 hold on;
-plot(1:length(Machine_MU),Machine_MU-PLAN_MU_,'g--');
+plot(1:length(VMAT_PLN_INFO.TRF_Differential_MU),VMAT_PLN_INFO.TRF_Differential_MU-PLAN_MU_,'g--');
 xlabel('number of control points ');
 ylabel('differential MU');
 legend('PLAN MU','MACHINE MU','Error');
 grid on;
 
+%% check Average Gantry Speed between treatment planning and delivery
 figure; 
-plot(1:length(PLN_Gantry_Speed),PLN_Gantry_Speed,'b-');
+plot(1:length(VMAT_PLN_INFO.GantrySpeed),VMAT_PLN_INFO.GantrySpeed,'b-');
 hold on; 
-plot(1:length(TRF_Gantry_Speed),TRF_Gantry_Speed,'r-');
+plot(1:length(VMAT_PLN_INFO.TRF_Gantry_Speed),VMAT_PLN_INFO.TRF_Gantry_Speed,'r-');
 hold on;
-plot(1:length(PLN_Gantry_Speed),TRF_Gantry_Speed-PLN_Gantry_Speed,'g--');
+plot(1:length(VMAT_PLN_INFO.GantrySpeed),VMAT_PLN_INFO.TRF_Gantry_Speed'-VMAT_PLN_INFO.GantrySpeed,'g--');
 xlabel('number of control points ');
 ylabel('Gantry Speed (deg/s)');
-legend('PLAN Speed','MACHINE Speed','Speed Error');
+legend('PLAN Gantry Speed','MACHINE Gantry Speed','Speed Error');
 grid on;
 
 
