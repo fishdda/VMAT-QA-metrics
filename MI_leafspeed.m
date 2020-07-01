@@ -5,9 +5,9 @@ function VMAT_PLN_INFO= MI_leafspeed(VMAT_PLN_INFO)
 %   doi: https://doi.org/10.1016/j.ijrobp.2019.07.049
 %
 
-%% prior-settings of Monaco Model for Elekta Machine
-Max_gantry_speed = 6; % degree/s
-Max_dose_rate = 720;  % MU/min
+%% prior-settings of Monaco Model for Elekta Machine(Varian Machine)
+Max_gantry_speed = 4.8; % degree/s 4.8
+Max_dose_rate = 600;  % MU/min   600
 
 %% calculate time interval between CPs
 time_interval = zeros(VMAT_PLN_INFO.Total_CPs-1,1);

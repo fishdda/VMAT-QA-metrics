@@ -28,7 +28,7 @@ for jj = 1:VMAT_PLN_INFO.Total_CPs-1
     eval(['time_interval(jj) = VMAT_PLN_INFO.TRF.CP',int2str(jj),'.VarName1(end)-VMAT_PLN_INFO.TRF.CP',int2str(jj),'.VarName1(1);'])
     eval(['VMAT_PLN_INFO.TRF_Gantry_Speed(jj) = (VMAT_PLN_INFO.TRF.CP',int2str(jj),'.StepGantryScaledActualdeg(end)-'...
         'VMAT_PLN_INFO.TRF.CP',int2str(jj),'.StepGantryScaledActualdeg(1))/time_interval(jj);'])
-%     VMAT_PLN_INFO.TRF_MLC_Speed(jj) = VMAT_PLN_INFO.TRF.CP1.;
+    VMAT_PLN_INFO.TRF_time_interval(jj) = time_interval(jj);
     eval(['VMAT_PLN_INFO.TRF_Differential_MU(jj) = VMAT_PLN_INFO.TRF.CP',int2str(jj),...
         '.StepDoseActualValueMu(end)-VMAT_PLN_INFO.TRF.CP',int2str(jj),'.StepDoseActualValueMu(1);']);
     
@@ -51,6 +51,31 @@ xlabel('number of control points ');
 ylabel('differential MU');
 legend('PLAN MU','MACHINE MU','Error');
 grid on;
+
+%% check time interval between CPs
+figure; 
+plot(1:length(VMAT_PLN_INFO.TRF_time_interval'),VMAT_PLN_INFO.TRF_time_interval','b-');
+hold on; 
+plot(1:length(VMAT_PLN_INFO.CP_time_interval),VMAT_PLN_INFO.CP_time_interval,'r-');
+hold on;
+plot(1:length(VMAT_PLN_INFO.CP_time_interval),VMAT_PLN_INFO.CP_time_interval-VMAT_PLN_INFO.TRF_time_interval','g--');
+xlabel('number of control points ');
+ylabel('differential Time interval between CPs');
+legend('MACHINE Delivery Time Interval','PLANNING Time Interval','Deviation');
+grid on;
+
+
+figure; 
+plot(1:length(time1),time1,'b-');
+hold on; 
+plot(1:length(time2),time2,'r-');
+hold on;
+plot(1:length(time2),time2-time1,'g--');
+xlabel('number of control points ');
+ylabel('differential Time interval between CPs');
+legend('Max Gantry Speed 6.0, Max DR 720','Max Gantry Speed 4.8, Max DR 600','Deviation');
+grid on;
+
 
 %% check Average Gantry Speed between treatment planning and delivery
 figure; 
@@ -137,13 +162,18 @@ MLC_TRF_CP3_Y1 = zeros(size(TRF_CP3,1),80);
 MLC_TRF_CP3_Y2 = zeros(size(TRF_CP3,1),80);
 MLC_TRF_CP3_X1 = zeros(size(TRF_CP3,1),1); 
 MLC_TRF_CP3_X2 = zeros(size(TRF_CP3,1),1);
+MLC_TRF_CP3_DoseRate = zeros(size(TRF_CP3,1),1);
+MLC_TRF_CP3_CumulativeMU= zeros(size(TRF_CP3,1),1);
 for jj = 1: size(TRF_CP3,1)
     MLC_TRF_CP3_X1(jj) = TRF_CP3(jj).X1DiaphragmScaledActualmm;
     MLC_TRF_CP3_X2(jj) = TRF_CP3(jj).X2DiaphragmScaledActualmm;
+    MLC_TRF_CP3_DoseRate(jj) = TRF_CP3(jj).ActualDoseRateActualValueMumin;
+    MLC_TRF_CP3_CumulativeMU(jj) = TRF_CP3(jj).StepDoseActualValueMu;
     for k = 1:80 
         eval(['MLC_TRF_CP3_Y1(jj,k) = TRF_CP3(jj).Y1Leaf',int2str(k),'ScaledActualmm;']);
         eval(['MLC_TRF_CP3_Y2(jj,k) = TRF_CP3(jj).Y2Leaf',int2str(k),'ScaledActualmm;']);
     end
+    
 end
 
 MLC_TRF_CP3_Y1 = MLC_TRF_CP3_Y1';MLC_TRF_CP3_Y2 = MLC_TRF_CP3_Y2';
