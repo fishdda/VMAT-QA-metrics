@@ -89,6 +89,19 @@ ylabel('Gantry Speed (deg/s)');
 legend('PLAN Gantry Speed','MACHINE Gantry Speed','Speed Error');
 grid on;
 
+%% check instant gantry speed and acceleration per 0.04s
+Gantry_rotatation_all = VMAT202003181Arctable.StepGantryScaledActualdeg;
+gantry_speed_all = Gantry_rotatation_all(2:end);
+for i=1:length(gantry_all)-1 
+    gantry_speed_all(i) = (gantry_all(i+1) - gantry_all(i))/0.04;
+end
+
+for i=1:length(gantry_speed_all)-1 
+    gantry_acceleration_all(i) = (gantry_speed_all(i+1) - gantry_speed_all(i))/0.04;
+end
+
+figure; plot(1:length(gantry_speed_all(1:end-1)),gantry_speed_all(1:end-1),'m-');title('˲ʱgantry speed per 0.04s');xlabel('time');ylabel('˲ʱgantry speed (deg/s)');
+figure; plot(1:length(gantry_acceleration_all(1:end-1)),gantry_acceleration_all(1:end-1),'m-');title('˲ʱgantry accelearation per 0.04s');xlabel('time');ylabel('˲ʱgantry acceleration(deg/s^2)');
 
 %% TEST MLC Speed Alteration within CPs
 
