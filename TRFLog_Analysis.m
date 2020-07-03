@@ -1,4 +1,4 @@
-function [outputArg1,outputArg2] = TRFLog_Analysis(TRF_DATA,VMAT_PLN_INFO)
+function TRFLog_Analysis(TRF_DATA,VMAT_PLN_INFO)
 %TRFLog_Analysis 
 % This TRF log analysis tool was used to analysis the csv file transfered
 % from trf generated via Elekta Linac Integrity. 
@@ -76,6 +76,20 @@ ylabel('differential Time interval between CPs');
 legend('Max Gantry Speed 6.0, Max DR 720','Max Gantry Speed 4.8, Max DR 600','Deviation');
 grid on;
 
+%% check average dose rate between treatment planning and delivery
+VMAT_PLN_INFO.TRF_Dose_Rate = VMAT_PLN_INFO.TRF_Differential_MU./VMAT_PLN_INFO.TRF_time_interval;
+
+figure; 
+plot(1:length(VMAT_PLN_INFO.DOSERATE),VMAT_PLN_INFO.DOSERATE,'b-');
+hold on; 
+plot(1:length(VMAT_PLN_INFO.TRF_Dose_Rate'),VMAT_PLN_INFO.TRF_Dose_Rate','r-');
+hold on;
+plot(1:length(VMAT_PLN_INFO.DOSERATE),VMAT_PLN_INFO.TRF_Dose_Rate'-VMAT_PLN_INFO.DOSERATE,'g--');
+xlabel('number of control points ');
+ylabel('Average Dose Rate (MU/s)');
+legend('PLAN Dose Rate(MU/s)','MACHINE Dose Rate(MU/s)','Dose Rate Deviation');
+grid on;
+
 
 %% check Average Gantry Speed between treatment planning and delivery
 figure; 
@@ -89,11 +103,14 @@ ylabel('Gantry Speed (deg/s)');
 legend('PLAN Gantry Speed','MACHINE Gantry Speed','Speed Error');
 grid on;
 
+
+
+
 %% check instant gantry speed and acceleration per 0.04s
 Gantry_rotatation_all = VMAT202003181Arctable.StepGantryScaledActualdeg;
 gantry_speed_all = Gantry_rotatation_all(2:end);
-for i=1:length(gantry_all)-1 
-    gantry_speed_all(i) = (gantry_all(i+1) - gantry_all(i))/0.04;
+for i=1:length(Gantry_rotatation_all)-1 
+    gantry_speed_all(i) = (Gantry_rotatation_all(i+1) - Gantry_rotatation_all(i))/0.04;
 end
 
 for i=1:length(gantry_speed_all)-1 
@@ -163,8 +180,8 @@ boxplot(MLC_Speed_CP3_Y2 + DLGY2_CP3)
 xlabel('Y2 Leaf pair');
 ylabel('MLC+DLG Leaf Speed(mm/s)');
 
-%% check mlc position between control point 3 and control point 4
-%%  e.g. Control Point 3
+%% check mlc position between control point 7 and control point 8
+%%  e.g. Control Point 7
 
 % PLAN CP3 shape 
 PLAN_CP3 = flipud(reshape(VMAT_PLN_INFO.CP_info{3, 3},[80,2]));  
@@ -212,13 +229,6 @@ end
 
 
 
-
-
-
-
-
-
-
 figure;
 for i=1:size(MLC_TRF_CP3,1)
 rectangle('Position', [0 1024-i*12.8 512+MLC_TRF_CP3(i,1) 12.8], 'FaceColor', [0 0 1 0.5]);
@@ -241,10 +251,46 @@ plot(512.5,512.5,'r+');
 axis off;
 end
 
+%% remove the time point with dose rate is zero
 
+for jj = 1:VMAT_PLN_INFO.Total_CPs-1    
+    eval(['VMAT_PLN_INFO.TRF2.CP',int2str(jj),...
+        '= Log_TRF(Log_TRF.ControlpointActualValueNone == jj & Log_TRF.LinacStateActualValueNone == ''Radiation On'' & Log_TRF.ActualDoseRateActualValueMumin ~= 0,{inf_{:},Y1{:},Y2{:}});']);
+    
+%     eval(['time_interval(jj) = VMAT_PLN_INFO.TRF2.CP',int2str(jj),'.VarName1(end)-VMAT_PLN_INFO.TRF2.CP',int2str(jj),'.VarName1(1);'])
+    eval(['time_interval(jj) = 0.04*(size(VMAT_PLN_INFO.TRF2.CP',int2str(jj),',1)-1);']);
+    eval(['VMAT_PLN_INFO.TRF_Gantry_Speed2(jj) = (VMAT_PLN_INFO.TRF2.CP',int2str(jj),'.StepGantryScaledActualdeg(end)-'...
+        'VMAT_PLN_INFO.TRF2.CP',int2str(jj),'.StepGantryScaledActualdeg(1))/time_interval(jj);'])
+    VMAT_PLN_INFO.TRF_time_interval2(jj) = time_interval(jj);
+    eval(['VMAT_PLN_INFO.TRF_Differential_MU2(jj) = VMAT_PLN_INFO.TRF2.CP',int2str(jj),...
+        '.StepDoseActualValueMu(end)-VMAT_PLN_INFO.TRF2.CP',int2str(jj),'.StepDoseActualValueMu(1);']);
+    
+end
+
+% compare time interval with 0 dose rate and without 0 dose rate
 figure; 
+plot(1:length(VMAT_PLN_INFO.TRF_time_interval'),VMAT_PLN_INFO.TRF_time_interval','b-');
+hold on; 
+plot(1:length(VMAT_PLN_INFO.CP_time_interval),VMAT_PLN_INFO.CP_time_interval,'r-');
+hold on;
+plot(1:length(VMAT_PLN_INFO.TRF_time_interval2'),VMAT_PLN_INFO.TRF_time_interval2','m-');
+xlabel('number of control points ');
+ylabel('differential Time interval between CPs');
+legend('MACHINE Delivery Time Interval consider 0 dose rate','PLANNING Time Interval(Max. Gantry Speed:6deg/s,Max. Dose Rate:720)','MACHINE Delivery Time Interval without 0 dose rate');
+grid on;
 
 
+% compare the gantry speed with 0 dose rate and without 0 dose rate
+figure; 
+plot(1:length(VMAT_PLN_INFO.TRF_Gantry_Speed),VMAT_PLN_INFO.TRF_Gantry_Speed,'b-');
+hold on; 
+plot(1:length(VMAT_PLN_INFO.TRF_Gantry_Speed2),VMAT_PLN_INFO.TRF_Gantry_Speed2,'r-');
+hold on;
+plot(1:length(VMAT_PLN_INFO.GantrySpeed),VMAT_PLN_INFO.GantrySpeed,'g-');
+xlabel('number of control points ');
+ylabel('Average Gantry Speed (deg/s)');
+legend('Machine Gantry Speed with 0 dose rate','Machine Gantry Speed without 0 dose rate','Plan Gantry Speed');
+grid on;
 
 
 end
