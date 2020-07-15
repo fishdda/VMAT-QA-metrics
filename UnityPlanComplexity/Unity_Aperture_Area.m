@@ -1,5 +1,5 @@
 function Unity_PLN_INFO = Unity_Aperture_Area(Unity_PLN_INFO)
-%Aperture_Area calculate the aperture area in Unity Step&Shoot Delivery
+%Unity_Aperture_Area calculate the aperture area in Unity Step&Shoot Delivery
 %Methods. Note: MLC direction is Y, Diaphgram direction is X. MLC width =
 %7mm.
 
@@ -14,53 +14,17 @@ for jj = 1:num_adapt
         seg_area = 0;
         
         % determine start and end point
-        half_leaf_pair = size(mlc_leaf,1)/2*mlc_width;
-        start_point = ((half_leaf_pair+xjaw(1))/mlc_width)+1;
-        end_point = size(mlc_leaf,1)-(half_leaf_pair-xjaw(2))/mlc_width;
+%         half_leaf_pair = size(mlc_leaf,1)/2*mlc_width;
+        start_point = find(CPS{k,5} == xjaw(1));
+        end_point = find(CPS{k,5} == xjaw(2));
+        fprintf("start_point is %dth jaws & end_point is %dth jaws\n",start_point,end_point);
         
-        if rem(start_point,1) == 0 && rem(end_point,1) == 0
-            % calculate segment area
-            for j = start_point:end_point
-                 seg_area =  seg_area + (mlc_leaf(j,2)-mlc_leaf(j,1))*mlc_width/100;
-            end
-        elseif rem(start_point,1) ~= 0 && rem(end_point,1) == 0
-            % calculate segment area
-            start_point = floor((half_leaf_pair+xjaw(1))/mlc_width)+1;
-            first_width = mlc_width - mod(half_leaf_pair+xjaw(1),mlc_width); % first leaf should be only 2mm width
-            seg_area = seg_area + (mlc_leaf(start_point,2)-mlc_leaf(start_point,1))*first_width/100;
-            for j = start_point+1:end_point
-                 seg_area =  seg_area + (mlc_leaf(j,2)-mlc_leaf(j,1))*mlc_width/100;   
-            end
-%             disp('rem(start_point,1) ~= 0 && rem(end_point,1) == 0');
-%             disp([k,i]);
-        elseif rem(start_point,1) == 0 && rem(end_point,1) ~= 0
-            
-            end_point = size(mlc_leaf,1)/2 + floor(xjaw(2)/mlc_width);
-            last_width = mod(xjaw(2),mlc_width); % first leaf should be only 2mm width
-            disp(end_point+1)
-            seg_area = seg_area + (mlc_leaf(end_point+1,2)-mlc_leaf(end_point+1,1))*last_width/100;
-            for j = start_point:end_point
-                 seg_area =  seg_area + (mlc_leaf(j,2)-mlc_leaf(j,1))*mlc_width/100;   
-            end
-            
-        elseif rem(start_point,1) ~= 0 && rem(end_point,1) ~= 0
-
-            start_point = floor((half_leaf_pair+xjaw(1))/mlc_width)+1;
-            end_point = size(mlc_leaf,1)/2 + floor(xjaw(2)/mlc_width);
-            last_width = mod(xjaw(2),mlc_width); % first leaf should be only 2mm width
-            first_width = mlc_width - mod(half_leaf_pair+xjaw(1),mlc_width); % first leaf should be only 2mm width
-            
-            seg_area = seg_area + (mlc_leaf(start_point,2)-mlc_leaf(start_point,1))*first_width/100;
-            seg_area = seg_area + (mlc_leaf(end_point+1,2)-mlc_leaf(end_point+1,1))*last_width/100;
-            for j = start_point+1:end_point
-                 seg_area =  seg_area + (mlc_leaf(j,2)-mlc_leaf(j,1))*mlc_width/100;   
-            end
-            disp('rem(start_point,1) ~= 0 && rem(end_point,1) ~= 0');
-            disp(seg_area);
-             
+        % calculate segment area
+        for j = start_point:end_point
+             seg_area =  seg_area + (mlc_leaf(j,2)-mlc_leaf(j,1))*mlc_width/100;
         end
         
-        Unity_PLN_INFO.(nam_adapt{jj}).CP_info_unity_{k,5} = seg_area;
+        Unity_PLN_INFO.(nam_adapt{jj}).CP_info_unity_{k,6} = seg_area; % to save segment area in column 6
     end
 end
 

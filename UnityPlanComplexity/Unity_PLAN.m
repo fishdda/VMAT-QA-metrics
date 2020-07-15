@@ -8,8 +8,6 @@ function Unity_PLN_INFO = Unity_PLAN(folder_path)
 %   the beam column. Here in this script, currently we only compatible to
 %   the first situation.
 folder_names = dir([folder_path,'*.dcm']);
-DICOM_path = [folder_names(1).folder,'\',folder_names(1).name];
-plan_info = dicominfo(DICOM_path);
 
 %% extract raw data from plans
 for j = 1:size(folder_names,1)
@@ -59,6 +57,9 @@ for j = 1:size(folder_names,1)
                 int2str(k),'.ControlPointSequence.Item_',int2str(jj),'.BeamLimitingDevicePositionSequence.Item_1.LeafJawPositions;']);
             eval(['Unity_PLN_INFO.([''Unity_'',plan_info.RTPlanName]).CP_info_raw{jj+cumu_cps,4} = plan_info.BeamSequence.Item_',...
                 int2str(k),'.ControlPointSequence.Item_',int2str(jj),'.BeamLimitingDevicePositionSequence.Item_2.LeafJawPositions ;']);
+            eval(['Unity_PLN_INFO.([''Unity_'',plan_info.RTPlanName]).CP_info_raw{jj+cumu_cps,5} = plan_info.BeamSequence.Item_',...
+                int2str(k),'.BeamLimitingDeviceSequence.Item_2.LeafPositionBoundaries ;']);
+            
         end
     end
     
@@ -88,6 +89,7 @@ for jj = 1:num_adapt
         
         Unity_PLN_INFO.(nam_adapt{jj}).CP_info_unity_{kk,3} = CP_info_unity{2*kk,3};% jaw position
         Unity_PLN_INFO.(nam_adapt{jj}).CP_info_unity_{kk,4} = CP_info_unity{2*kk,4};% leaf position
+        Unity_PLN_INFO.(nam_adapt{jj}).CP_info_unity_{kk,5} = CP_info_unity{2*kk,5};% leaf position boundaries
     end
 end
 
