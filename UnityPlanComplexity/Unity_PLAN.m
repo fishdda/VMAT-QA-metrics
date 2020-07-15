@@ -1,4 +1,4 @@
-function Unity_PLN_INFO = Unity_PLAN(DICOM_path)
+function Unity_PLN_INFO = Unity_PLAN(folder_path)
 
 % read rtplan dicom file to extract the leaf position and MU
 % DICOM_path = '/Users/henryhuang/Desktop/VMAT-QA-metrics-master/0028_VMAT20200318.dcm';
@@ -7,58 +7,91 @@ function Unity_PLN_INFO = Unity_PLAN(DICOM_path)
 %   num of arcs setting in sequencing parameters. 2) add more arc beams in
 %   the beam column. Here in this script, currently we only compatible to
 %   the first situation.
+folder_names = dir([folder_path,'*.dcm']);
 DICOM_path = [folder_names(1).folder,'\',folder_names(1).name];
 plan_info = dicominfo(DICOM_path);
 
+%% extract raw data from plans
+for j = 1:size(folder_names,1)
+    % iterate each online adaptive plan
+    DICOM_path = [folder_names(j).folder,'\',folder_names(j).name];
+    plan_info = dicominfo(DICOM_path); % adaptive plan except the first one
+    
+    % store field numbers
+    Unity_PLN_INFO.(['Unity_',plan_info.RTPlanName]).Field_Nums = size(fieldnames(plan_info.FractionGroupSequence.Item_1.ReferencedBeamSequence),1);
+    
+    % target prescription dose
+    Unity_PLN_INFO.(['Unity_',plan_info.RTPlanName]).TPD = plan_info.DoseReferenceSequence.Item_1.TargetPrescriptionDose;
+    fprintf('Target prescription dose(Gy):%2f \n',Unity_PLN_INFO.(['Unity_',plan_info.RTPlanName]).TPD);
+    
+    % fractions
+    Unity_PLN_INFO.(['Unity_',plan_info.RTPlanName]).FX = plan_info.FractionGroupSequence.Item_1.NumberOfFractionsPlanned;
+    fprintf('Fractions:%d \n',Unity_PLN_INFO.(['Unity_',plan_info.RTPlanName]).FX);
 
-% total Number of Beams
-Unity_PLN_INFO.Field_Nums = size(fieldnames(plan_info.FractionGroupSequence.Item_1.ReferencedBeamSequence),1);
-
-% total MU and each beam MU
-Unity_PLN_INFO.Total_MU = 0;
-for k = 1:Unity_PLN_INFO.Field_Nums
-    Unity_PLN_INFO.CP_info.Beam_ko
     
+    % calculate total MU and total control points for each plan
+    Unity_PLN_INFO.(['Unity_',plan_info.RTPlanName]).Total_MU = 0; 
+    Unity_PLN_INFO.(['Unity_',plan_info.RTPlanName]).Total_CPs = 0;
+    Unity_PLN_INFO.(['Unity_',plan_info.RTPlanName]).Beam_MU = [];
+    for k = 1:size(fieldnames(plan_info.FractionGroupSequence.Item_1.ReferencedBeamSequence),1)
+        % iterate beam number
+        eval(['Unity_PLN_INFO.([''Unity_'',plan_info.RTPlanName]).Beam_MU = [Unity_PLN_INFO.([''Unity_'',plan_info.RTPlanName]).Beam_MU,',...
+            'plan_info.FractionGroupSequence.Item_1.ReferencedBeamSequence.Item_',...
+            int2str(k),'.BeamMeterset];']);
+        
+        eval(['Unity_PLN_INFO.([''Unity_'',plan_info.RTPlanName]).Total_MU = Unity_PLN_INFO.([''Unity_'',plan_info.RTPlanName]).Total_MU',...
+            '+ plan_info.FractionGroupSequence.Item_1.ReferencedBeamSequence.Item_',...
+            int2str(k),'.BeamMeterset;']); % total MUs
+        eval(['Unity_PLN_INFO.([''Unity_'',plan_info.RTPlanName]).Total_CPs = Unity_PLN_INFO.([''Unity_'',plan_info.RTPlanName]).Total_CPs'...
+            '+ plan_info.BeamSequence.Item_',int2str(k),'.NumberOfControlPoints;']); % total control points
+        
+        eval(['beam_CPs = plan_info.BeamSequence.Item_',int2str(k),'.NumberOfControlPoints;']);
+        
+        % calculate gantry angle,cumulative mu, MLC positions, Jaw positions
+        for jj = 1:beam_CPs
+            disp(jj)
+            cumu_cps = Unity_PLN_INFO.(['Unity_',plan_info.RTPlanName]).Total_CPs - beam_CPs;
+            eval(['Unity_PLN_INFO.([''Unity_'',plan_info.RTPlanName]).CP_info_raw{jj+cumu_cps,1} = plan_info.BeamSequence.Item_',...
+                int2str(k),'.ControlPointSequence.Item_1.GantryAngle;']);
+            eval(['Unity_PLN_INFO.([''Unity_'',plan_info.RTPlanName]).CP_info_raw{jj+cumu_cps,2} = plan_info.BeamSequence.Item_',...
+                int2str(k),'.ControlPointSequence.Item_',int2str(jj),'.CumulativeMetersetWeight;']);
+            eval(['Unity_PLN_INFO.([''Unity_'',plan_info.RTPlanName]).CP_info_raw{jj+cumu_cps,3} = plan_info.BeamSequence.Item_',...
+                int2str(k),'.ControlPointSequence.Item_',int2str(jj),'.BeamLimitingDevicePositionSequence.Item_1.LeafJawPositions;']);
+            eval(['Unity_PLN_INFO.([''Unity_'',plan_info.RTPlanName]).CP_info_raw{jj+cumu_cps,4} = plan_info.BeamSequence.Item_',...
+                int2str(k),'.ControlPointSequence.Item_',int2str(jj),'.BeamLimitingDevicePositionSequence.Item_2.LeafJawPositions ;']);
+        end
+    end
     
-    
-    eval(['Unity_PLN_INFO.Total_MU = Unity_PLN_INFO.Total_MU + plan_info.FractionGroupSequence.Item_1.ReferencedBeamSequence.Item_',...
-        int2str(k),'.BeamMeterset;']);
 end
-fprintf('Total MU:%3f \n',Unity_PLN_INFO.Total_MU);
 
-% total control points
-Unity_PLN_INFO.Total_CPs = plan_info.BeamSequence.Item_1.NumberOfControlPoints;
-fprintf('Total control points: %d \n',Unity_PLN_INFO.Total_CPs);
-
-% fractions
-Unity_PLN_INFO.FX = plan_info.FractionGroupSequence.Item_1.NumberOfFractionsPlanned;
-fprintf('Fractions:%d \n',Unity_PLN_INFO.FX);
-
-% target prescription dose
-Unity_PLN_INFO.TPD = plan_info.DoseReferenceSequence.Item_1.TargetPrescriptionDose;
-fprintf('Target prescription dose(Gy):%2f \n',Unity_PLN_INFO.TPD);
-
-%extract CP and MU
-% e.g CP1 : 180, MU, MLC position,jaw position, 
-Unity_PLN_INFO.CP_info = cell(Unity_PLN_INFO.Total_CPs,4);
-
-for j=1:Unity_PLN_INFO.Total_CPs
-    eval(['Unity_PLN_INFO.CP_info{',int2str(j),',1} = plan_info.BeamSequence.Item_1.ControlPointSequence.Item_',...
-        int2str(j),'.GantryAngle;']) % gantry angle
-    eval(['Unity_PLN_INFO.CP_info{',int2str(j),',2} = Unity_PLN_INFO.Total_MU*plan_info.BeamSequence.Item_1.ControlPointSequence.Item_',...
-        int2str(j),'.CumulativeMetersetWeight;']) %cumulative mu weight
-    eval(['Unity_PLN_INFO.CP_info{',int2str(j),',3} = plan_info.BeamSequence.Item_1.ControlPointSequence.Item_',...
-        int2str(j),'.BeamLimitingDevicePositionSequence.Item_2.LeafJawPositions;']) % Jaw position   
-    eval(['Unity_PLN_INFO.CP_info{',int2str(j),',4} = plan_info.BeamSequence.Item_1.ControlPointSequence.Item_',...
-        int2str(j),'.BeamLimitingDevicePositionSequence.Item_1.LeafJawPositions;']) % MLC position  
-    fprintf("This is %d th control point \n",j);
+%% further cleaning raw data
+% determine how many adaptive plans it has
+num_adapt = size(fieldnames(Unity_PLN_INFO),1);
+nam_adapt = fieldnames(Unity_PLN_INFO);
+for jj = 1:num_adapt
+    
+    %iterate each adaptive plan and modification o
+    CP_info_unity = Unity_PLN_INFO.(nam_adapt{jj}).CP_info_raw;
+    count = 1;
+    for kk = 1:size(CP_info_unity,1)/2
+        Unity_PLN_INFO.(nam_adapt{jj}).CP_info_unity_{kk,1} = CP_info_unity{2*kk,1};% gantry angle
+        if kk > 1 && Unity_PLN_INFO.(nam_adapt{jj}).CP_info_unity_{kk,1} ~= Unity_PLN_INFO.(nam_adapt{jj}).CP_info_unity_{kk-1,1}
+            count = count + 1;
+            Unity_PLN_INFO.(nam_adapt{jj}).CP_info_unity_{kk,2} = (CP_info_unity{2*kk,2}-CP_info_unity{2*kk-1,2})*Unity_PLN_INFO.(nam_adapt{jj}).Beam_MU(count);% individual mu
+        
+        elseif kk > 1 && Unity_PLN_INFO.(nam_adapt{jj}).CP_info_unity_{kk,1} == Unity_PLN_INFO.(nam_adapt{jj}).CP_info_unity_{kk-1,1}
+            Unity_PLN_INFO.(nam_adapt{jj}).CP_info_unity_{kk,2} = (CP_info_unity{2*kk,2}-CP_info_unity{2*kk-1,2})*Unity_PLN_INFO.(nam_adapt{jj}).Beam_MU(count);% individual mu
+        
+        elseif kk == 1 
+            Unity_PLN_INFO.(nam_adapt{jj}).CP_info_unity_{kk,2} = (CP_info_unity{2*kk,2})*Unity_PLN_INFO.(nam_adapt{jj}).Beam_MU(count); % individual mu
+        end
+        
+        Unity_PLN_INFO.(nam_adapt{jj}).CP_info_unity_{kk,3} = CP_info_unity{2*kk,3};% jaw position
+        Unity_PLN_INFO.(nam_adapt{jj}).CP_info_unity_{kk,4} = CP_info_unity{2*kk,4};% leaf position
+    end
 end
 
-% to analyze the plan has how many arcs.
-index = cell2mat(Unity_PLN_INFO.CP_info(:,1)) == 180;
-index2 = find(index == 1);
-var = index2(2:end) - index2(1:end-1);
-Unity_PLN_INFO.Arc_Num = 1 + sum(var == 1);
+
 
 end
 
