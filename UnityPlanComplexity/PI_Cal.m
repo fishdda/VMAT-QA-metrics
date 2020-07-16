@@ -4,7 +4,7 @@ function Unity_PLN_INFO = PI_Cal(Unity_PLN_INFO)
 num_adapt = size(fieldnames(Unity_PLN_INFO),1);
 nam_adapt = fieldnames(Unity_PLN_INFO);
 for jj = 1:num_adapt  
-    Unity_PLN_INFO.(nam_adapt{jj}).AI = (cell2mat(Unity_PLN_INFO.(nam_adapt{jj}).CP_info_unity_(:,7))).^2./(4*pi*cell2mat(Unity_PLN_INFO.(nam_adapt{1}).CP_info_unity_(:,6))); 
+    Unity_PLN_INFO.(nam_adapt{jj}).AI = (cell2mat(Unity_PLN_INFO.(nam_adapt{jj}).CP_info_unity_(:,7))).^2./(4*pi*cell2mat(Unity_PLN_INFO.(nam_adapt{jj}).CP_info_unity_(:,6))); 
     % gantry angles
     G_angles = cell2mat(Unity_PLN_INFO.Unity_10FIMRTApp.CP_info_unity_(:,1));
     G_angles_uni = unique(cell2mat(Unity_PLN_INFO.Unity_10FIMRTApp.CP_info_unity_(:,1)));

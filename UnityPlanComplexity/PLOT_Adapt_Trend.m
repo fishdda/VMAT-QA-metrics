@@ -11,6 +11,10 @@ for jj = 1:num_adapt
 end
 
 
+Beam_MUs = [Unity_PLN_INFO.Unity_Pros3625U2.Beam_MU;];
+
+
+
 
 end
 

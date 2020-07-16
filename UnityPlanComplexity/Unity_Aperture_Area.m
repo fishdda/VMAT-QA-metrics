@@ -14,9 +14,11 @@ for jj = 1:num_adapt
         seg_area = 0;
         
         % determine start and end point
-%         half_leaf_pair = size(mlc_leaf,1)/2*mlc_width;
+        % note if it's the reference plan, the virtual leaf should exist in
+        % the leaf sequence. But 
         start_point = find(CPS{k,5} == xjaw(1));
         end_point = find(CPS{k,5} == xjaw(2));
+        
         fprintf("start_point is %dth jaws & end_point is %dth jaws\n",start_point,end_point);
         
         % calculate segment area
