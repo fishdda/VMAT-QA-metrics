@@ -295,3 +295,25 @@ grid on;
 
 end
 
+
+
+TEST_CP = table2struct(VMAT_PLN_INFO.TRF.CP146);
+TEST_CP1 = table2struct(VMAT_PLN_INFO.TRF1.CP146);
+
+
+jj = 40;
+for k = 1:80 
+    eval(['MLC_TRF_CP146_Y1(k) = TEST_CP(jj).Y1Leaf',int2str(k),'ScaledActualmm;']);
+    eval(['MLC_TRF_CP146_Y2(k) = TEST_CP(jj).Y2Leaf',int2str(k),'ScaledActualmm;']);
+end
+
+jj = 50;
+for k = 1:80 
+    eval(['MLC_TRF_CP146_Y1_1(k) = TEST_CP1(jj).Y1Leaf',int2str(k),'ScaledActualmm;']);
+    eval(['MLC_TRF_CP146_Y2_1(k) = TEST_CP1(jj).Y2Leaf',int2str(k),'ScaledActualmm;']);
+end
+
+
+MLC_last = ;
+
+

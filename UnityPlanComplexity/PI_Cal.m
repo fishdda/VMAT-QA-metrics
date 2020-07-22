@@ -14,6 +14,9 @@ for jj = 1:num_adapt
         ele = sum(flag.*cell2mat(Unity_PLN_INFO.(nam_adapt{jj}).CP_info_unity_(:,2)).*Unity_PLN_INFO.(nam_adapt{jj}).AI)/Unity_PLN_INFO.(nam_adapt{jj}).Beam_MU(kk);
         Unity_PLN_INFO.(nam_adapt{jj}).PI = Unity_PLN_INFO.(nam_adapt{jj}).PI + ele*Unity_PLN_INFO.(nam_adapt{jj}).Beam_MU(kk)/Unity_PLN_INFO.(nam_adapt{jj}).Total_MU;
     end
+    
+    Unity_PLN_INFO.(nam_adapt{jj}).Aperture_MU = sum(cell2mat(Unity_PLN_INFO.(nam_adapt{jj}).CP_info_unity_(:,2)).*cell2mat(Unity_PLN_INFO.(nam_adapt{jj}).CP_info_unity_(:,6)));
+    
 end
 
 

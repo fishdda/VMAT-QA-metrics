@@ -31,6 +31,7 @@ for j = 1:size(folder_names,1)
     Unity_PLN_INFO.(['Unity_',plan_info.RTPlanName]).Total_MU = 0; 
     Unity_PLN_INFO.(['Unity_',plan_info.RTPlanName]).Total_CPs = 0;
     Unity_PLN_INFO.(['Unity_',plan_info.RTPlanName]).Beam_MU = [];
+    Gantry = [];
     for k = 1:size(fieldnames(plan_info.FractionGroupSequence.Item_1.ReferencedBeamSequence),1)
         % iterate beam number
         eval(['Unity_PLN_INFO.([''Unity_'',plan_info.RTPlanName]).Beam_MU = [Unity_PLN_INFO.([''Unity_'',plan_info.RTPlanName]).Beam_MU,',...
@@ -44,11 +45,21 @@ for j = 1:size(folder_names,1)
             '+ plan_info.BeamSequence.Item_',int2str(k),'.NumberOfControlPoints;']); % total control points
         
         eval(['beam_CPs = plan_info.BeamSequence.Item_',int2str(k),'.NumberOfControlPoints;']);
+
+        
+        eval(['Angle(k) = plan_info.BeamSequence.Item_',...
+                int2str(k),'.ControlPointSequence.Item_1.GantryAngle;']);
+        if k > 1 && Angle(k) ~= Angle(k-1)
+            Gantry = [Gantry,Angle(k)];
+        elseif k == 1
+            Gantry = [Gantry,Angle(k)];
+        end
         
         % calculate gantry angle,cumulative mu, MLC positions, Jaw positions
         for jj = 1:beam_CPs
             disp(jj)
             cumu_cps = Unity_PLN_INFO.(['Unity_',plan_info.RTPlanName]).Total_CPs - beam_CPs;
+
             eval(['Unity_PLN_INFO.([''Unity_'',plan_info.RTPlanName]).CP_info_raw{jj+cumu_cps,1} = plan_info.BeamSequence.Item_',...
                 int2str(k),'.ControlPointSequence.Item_1.GantryAngle;']);
             eval(['Unity_PLN_INFO.([''Unity_'',plan_info.RTPlanName]).CP_info_raw{jj+cumu_cps,2} = plan_info.BeamSequence.Item_',...
@@ -61,6 +72,8 @@ for j = 1:size(folder_names,1)
                 int2str(k),'.BeamLimitingDeviceSequence.Item_2.LeafPositionBoundaries ;']);
             
         end
+        
+        Unity_PLN_INFO.(['Unity_',plan_info.RTPlanName]).Gantry_Angle = Gantry;
     end
     
 end
