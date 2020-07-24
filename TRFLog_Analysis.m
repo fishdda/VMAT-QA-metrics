@@ -41,6 +41,33 @@ for i=1:size(PLAN_MU,1)-1
     PLAN_MU_(i) =  PLAN_MU{i+1,1} - PLAN_MU{i,1};
 end
 
+%% check certain MLC leaf position error from plan and TRF files
+% Here we select CP2->CP3->CP4 , MLC leaf Y1 45 position
+Dose_Rate_CP234 = [VMAT_PLN_INFO.TRF.CP2.ActualDoseRateActualValueMumin',...
+                   VMAT_PLN_INFO.TRF.CP3.ActualDoseRateActualValueMumin',...
+                   VMAT_PLN_INFO.TRF.CP4.ActualDoseRateActualValueMumin'];
+Y1_45_pos = [VMAT_PLN_INFO.TRF.CP2.Y1Leaf45ScaledActualmm',...
+             VMAT_PLN_INFO.TRF.CP3.Y1Leaf45ScaledActualmm',...
+             VMAT_PLN_INFO.TRF.CP4.Y1Leaf45ScaledActualmm'];
+         
+MLC1 = VMAT_PLN_INFO.CP_info{2,3};
+MLC2 = VMAT_PLN_INFO.CP_info{3,3};
+MLC3 = VMAT_PLN_INFO.CP_info{4,3};
+Plan_MLC = [MLC1(35),MLC2(35),MLC3(35)];
+figure;
+[hAxes,~,~] = plotyy(1:length(Dose_Rate_CP234),Dose_Rate_CP234,1:length(Y1_45_pos),Y1_45_pos);
+% set(hLine2,'LineWidth',1,'Color',[0,0.7,0.7],'Marker','--');
+% set(gca,'XTickLabel',{'RePlan','ADT01','ADT02','ADT03','ADT04','ADT05'});
+% set(gca,'FontSize',10,'FontWeight','bold')    %对坐标轴字体大小和粗细更改
+set(gcf,'color','white')
+xlabel('Time (s)');
+grid on;
+ylabel(hAxes(1),'Dose Rate(MU/min)');
+ylabel(hAxes(2),'MLC position(mm)');
+legend('Dose Rate(MU/min)','Y1 45 position');
+
+
+
 figure; 
 plot(1:length(PLAN_MU_),PLAN_MU_,'b-');
 hold on; 
@@ -312,8 +339,5 @@ for k = 1:80
     eval(['MLC_TRF_CP146_Y1_1(k) = TEST_CP1(jj).Y1Leaf',int2str(k),'ScaledActualmm;']);
     eval(['MLC_TRF_CP146_Y2_1(k) = TEST_CP1(jj).Y2Leaf',int2str(k),'ScaledActualmm;']);
 end
-
-
-MLC_last = ;
 
 
